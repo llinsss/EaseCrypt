@@ -1,0 +1,9 @@
+[build]
+  command = "cd frontend && npm install --legacy-peer-deps && npm run build"
+  publish = "frontend/.next"
+  functions = "frontend/.netlify/functions"
+
+[build.environment]
+  NEXT_TELEMETRY_DISABLED = "1"
+  NODE_VERSION = "18.18.0"
+
