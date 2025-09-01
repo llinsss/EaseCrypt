@@ -10,6 +10,5 @@
   },
   "dependencies": {
     "@coinbase/onchainkit": "^0.38.19",
-    "styled-jsx": "^5.1.7"
   }
 }
