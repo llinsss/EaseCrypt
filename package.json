@@ -7,5 +7,8 @@
     "build": "cd frontend && npm run build",
     "start": "cd frontend && npm start",
     "lint": "cd frontend && npm run lint"
+  },
+  "dependencies": {
+    "@coinbase/onchainkit": "^0.38.19"
   }
 }
