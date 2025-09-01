@@ -2,7 +2,7 @@
 
 import { MiniKitProvider } from '@coinbase/onchainkit/minikit';
 import { ReactNode } from 'react';
-import { base } from 'wagmi/chains';
+import { base } from 'viem/chains';
 
 export function MiniKitContextProvider({ children }: { children: ReactNode }) {
   return (
