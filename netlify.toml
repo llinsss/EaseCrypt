@@ -6,6 +6,7 @@
 [build.environment]
   NEXT_TELEMETRY_DISABLED = "1"
   NODE_VERSION = "18.18.0"
+  NETLIFY_USE_NPM = "true"
 
   # === EaseCrypt Public Config (Safe for Frontend) ===
   NEXT_PUBLIC_CONTRACT_ADDRESS = "0x34Af2D46E9a81D19c25eFC4706Edc63262764376"
@@ -17,4 +18,3 @@
   NEXT_PUBLIC_APP_HERO_IMAGE = "https://yourcdn.com/hero.png"
   NEXT_PUBLIC_SPLASH_IMAGE = "https://yourcdn.com/splash.png"
   NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR = "#101010"
-
