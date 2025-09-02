@@ -1,8 +1,8 @@
 {
   "name": "EaseCrypt",
   "description": "Seamless crypto payments for Africa — starting with Nigeria.",
-  "icon_url": "https://yourcdn.com/icon.png",
-  "splash_image_url": "https://yourcdn.com/splash.png",
+  "icon_url": "https://easecrypt.netlify.app/icon.png",
+  "splash_image_url": "https://easecrypt.netlify.app/splash.png",
   "splash_background_color": "#101010",
   "app_url": "https://easecrypt.netlify.app",
   "web_url": "https://easecrypt.netlify.app",
