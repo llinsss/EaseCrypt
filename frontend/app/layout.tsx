@@ -5,26 +5,38 @@ import "./globals.css"
 // 1. Import your provider
 import { MiniKitContextProvider } from "@/providers/MiniKitProvider"
 
+// Helper to ensure URLs are absolute
+function toAbsolute(url: string | undefined, base: string) {
+  if (!url) return undefined
+  if (url.startsWith("http://") || url.startsWith("https://")) return url
+  const needsSlash = url.startsWith("/") ? "" : "/"
+  return `${base}${needsSlash}${url}`
+}
+
 // Use only generateMetadata (merge static + dynamic here)
 export async function generateMetadata(): Promise<Metadata> {
   const URL = process.env.NEXT_PUBLIC_URL as string
+  const name = process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME || "EaseCrypt"
+  const hero = toAbsolute(process.env.NEXT_PUBLIC_APP_HERO_IMAGE, URL)
+  const splash = toAbsolute(process.env.NEXT_PUBLIC_SPLASH_IMAGE, URL)
+  const splashBg = process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR || "#101010"
 
   return {
-    title: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME || "EaseCrypt - Buy Crypto Easily",
+    title: name,
     description: "Purchase cryptocurrency with fiat currency. No account needed.",
     generator: "v0.app",
     other: {
       "fc:frame": JSON.stringify({
         version: "next",
-        imageUrl: process.env.NEXT_PUBLIC_APP_HERO_IMAGE,
+        imageUrl: hero,
         button: {
-          title: `Launch ${process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME || "EaseCrypt"}`,
+          title: `Launch ${name}`,
           action: {
             type: "launch_frame",
-            name: process.env.NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME || "EaseCrypt",
+            name,
             url: URL,
-            splashImageUrl: process.env.NEXT_PUBLIC_SPLASH_IMAGE,
-            splashBackgroundColor: process.env.NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR,
+            splashImageUrl: splash,
+            splashBackgroundColor: splashBg,
           },
         },
       }),
@@ -55,4 +67,3 @@ export default function RootLayout({
     </html>
   )
 }
-
