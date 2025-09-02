@@ -7,3 +7,14 @@
   NEXT_TELEMETRY_DISABLED = "1"
   NODE_VERSION = "18.18.0"
 
+  # === EaseCrypt Public Config ===
+  NEXT_PUBLIC_CONTRACT_ADDRESS = "0x34Af2D46E9a81D19c25eFC4706Edc63262764376"
+  NEXT_PUBLIC_NETWORK_NAME = "sepolia"
+  NEXT_PUBLIC_ONCHAINKIT_API_KEY = "pk_test_dummy_api_key"
+  NEXT_PUBLIC_ONCHAINKIT_PROJECT_NAME = "EaseCrypt"
+  NEXT_PUBLIC_ICON_URL = "https://yourcdn.com/icon.png"
+  NEXT_PUBLIC_URL = "https://easecrypt.netlify.app"
+  NEXT_PUBLIC_APP_HERO_IMAGE = "https://yourcdn.com/hero.png"
+  NEXT_PUBLIC_SPLASH_IMAGE = "https://yourcdn.com/splash.png"
+  NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR = "#101010"
+
