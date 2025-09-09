@@ -34,7 +34,7 @@ export function EaseCryptApp() {
     const tokens = {
       ethereum: { name: "Ethereum", symbol: "ETH" },
       bitcoin: { name: "Bitcoin", symbol: "BTC" },
-      usdc: { name: "USD Coin", symbol: "USDC" },
+      strk: { name: "STRK", symbol: "STRK" },
       usdt: { name: "Tether", symbol: "USDT" },
     }
     const token = tokens[value as keyof typeof tokens]
@@ -117,10 +117,10 @@ export function EaseCryptApp() {
                   Bitcoin (BTC)
                 </SelectItem>
                 <SelectItem
-                  value="usdc"
+                  value="strk"
                   className="px-4 py-2 text-base hover:bg-gray-100 cursor-pointer"
                 >
-                  USD Coin (USDC)
+                  STRK
                 </SelectItem>
                 <SelectItem
                   value="usdt"
