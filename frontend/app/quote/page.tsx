@@ -21,6 +21,7 @@ export default function QuotePage() {
     return rates[symbol as keyof typeof rates] || 400000
   const networkFee = 50
   const totalCost = Number.parseInt(amount) + networkFee
+  const cryptoAmount = 100
 
   return (
     <div className="min-h-screen bg-white flex items-center justify-center p-4">
@@ -81,4 +82,5 @@ export default function QuotePage() {
       </Card>
     </div>
   )
+}
 }
