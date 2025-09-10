@@ -32,7 +32,7 @@ const limiter = rateLimit({
 // app.use(bodyParser.json());
 app.use(helmet());
 app.use(cors());
-// app.use(limiter);
+app.use(limiter);
 app.use(express.json({ limit: "10mb" }));
 app.use(express.urlencoded({ extended: true }));
 
