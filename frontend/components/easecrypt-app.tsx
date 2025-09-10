@@ -143,8 +143,7 @@ export function EaseCryptApp() {
           <p className="text-sm text-gray-600">
             Purchase cryptocurrency with fiat currency. No account needed.
           </p>
-        </div>
-
+        </div
         {/* Token selection */}
         <div className="space-y-2">
           <label
@@ -159,6 +158,7 @@ export function EaseCryptApp() {
             </SelectTrigger>
             <SelectContent className="bg-white border border-gray-200 rounded-md shadow-lg mt-1 py-1">
               {Object.entries(TOKENS).map(([key, token]) => (
+
                 <SelectItem
                   key={key}
                   value={key}
