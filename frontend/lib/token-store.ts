@@ -1,18 +1,18 @@
-import { create } from "zustand"
-import { persist } from "zustand/middleware"
+import { create } from "zustand";
+import { persist } from "zustand/middleware";
 
 interface TokenState {
-  selectedToken: string
-  tokenName: string
-  tokenSymbol: string
-  amount: string
-  walletAddress: string
-  email: string
-  setToken: (token: string, name: string, symbol: string) => void
-  setAmount: (amount: string) => void
-  setWalletAddress: (address: string) => void
-  setEmail: (email: string) => void
-  reset: () => void
+  selectedToken: string;
+  tokenName: string;
+  tokenSymbol: string;
+  amount: string;
+  address: string;
+  email: string;
+  setToken: (token: string, name: string, symbol: string) => void;
+  setAmount: (amount: string) => void;
+  setAddress: (address: string) => void;
+  setEmail: (email: string) => void;
+  reset: () => void;
 }
 
 export const useTokenStore = create<TokenState>()(
@@ -22,11 +22,12 @@ export const useTokenStore = create<TokenState>()(
       tokenName: "Ethereum",
       tokenSymbol: "ETH",
       amount: "5000",
-      walletAddress: "",
+      address: "",
       email: "",
-      setToken: (token, name, symbol) => set({ selectedToken: token, tokenName: name, tokenSymbol: symbol }),
+      setToken: (token, name, symbol) =>
+        set({ selectedToken: token, tokenName: name, tokenSymbol: symbol }),
       setAmount: (amount) => set({ amount }),
-      setWalletAddress: (address) => set({ walletAddress: address }),
+      setAddress: (address) => set({ address }),
       setEmail: (email) => set({ email }),
       reset: () =>
         set({
@@ -34,12 +35,12 @@ export const useTokenStore = create<TokenState>()(
           tokenName: "Ethereum",
           tokenSymbol: "ETH",
           amount: "5000",
-          walletAddress: "",
+          address: "",
           email: "",
         }),
     }),
     {
       name: "crypto-ease-store",
-    },
-  ),
-)
+    }
+  )
+);
