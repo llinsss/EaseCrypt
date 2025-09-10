@@ -61,9 +61,9 @@ router.post("/paystack", async (req, res) => {
 
 router.post("/flutterwave", async (req, res) => {
   console.log(req.body);
-  if (!verifyFlutterwaveSignature(req)) {
-    return res.status(401).send("Invalid Flutterwave signature");
-  }
+  // if (!verifyFlutterwaveSignature(req)) {
+  //   return res.status(401).send("Invalid Flutterwave signature");
+  // }
 
   const event = req.body.event;
   const data = req.body.data;
