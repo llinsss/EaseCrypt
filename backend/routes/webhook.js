@@ -26,6 +26,17 @@ function verifyFlutterwaveSignature(req) {
   return signature === secretHash;
 }
 
+function isValidFlutterwaveWebhook(rawBody) {
+  const secretHash = process.env.FLUTTERWAVE_SECRET_HASH;
+  const signature = req.headers["verif-hash"];
+  const hash = crypto
+    .createHmac("sha256", secretHash)
+    .update(JSON.stringify(req.body))
+    .digest("base64");
+
+  return hash === signature;
+}
+
 router.post("/paystack", async (req, res) => {
   if (!verifyPaystackSignature(req)) {
     return res.status(401).send("Invalid signature");
@@ -56,7 +67,7 @@ router.post("/flutterwave", async (req, res) => {
   const event = req.body.event;
   const data = req.body.data;
 
-  if (event === "charge.completed" && data.status === "successful") {
+  if (event === "transfer.completed" && data.status === "successful") {
     console.log("✅ Flutterwave Payment received:", data.amount, data.currency);
     console.log("Customer:", data.customer?.email);
 
