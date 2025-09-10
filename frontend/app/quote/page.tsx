@@ -13,15 +13,12 @@ export default function QuotePage() {
 
   const getTokenRate = (symbol: string) => {
     const rates = {
-      ETH: 0.00123,
-      BTC: 0.000045,
-      USDC: 3.2,
-      USDT: 3.18,
+      ETH: 400000,
+      BTC: 9000000,
+      STRK: 2000,
+      USDT: 800,
     }
-    return rates[symbol as keyof typeof rates] || 0.00123
-  }
-
-  const cryptoAmount = getTokenRate(tokenSymbol)
+    return rates[symbol as keyof typeof rates] || 400000
   const networkFee = 50
   const totalCost = Number.parseInt(amount) + networkFee
 
