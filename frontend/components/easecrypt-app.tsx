@@ -211,9 +211,10 @@ export function EaseCryptApp() {
           </Select>
           <div className="w-full flex justify-end text-sm text-gray-600">
             {token &&
-            cryptoRate?.symbol.includes(TOKENS[token].symbol) &&
+            cryptoRate?.symbol &&
+            cryptoRate.symbol.includes(TOKENS[token].symbol) &&
             !cryptoRateLoading
-              ? `1 ${TOKENS[token].symbol} = ${cryptoRate?.last} USD`
+              ? `1 ${TOKENS[token].symbol} = ${cryptoRate.last} USD`
               : "Fetching rate..."}
           </div>
         </div>
