@@ -1,7 +1,8 @@
 [build]
-  command = "cd frontend && npm install --legacy-peer-deps && npm run build"
-  publish = "frontend/.next"
-  functions = "frontend/.netlify/functions"
+  base = "frontend"
+  command = "npm run build"
+  publish = ".next"
+  functions = ".netlify/functions"
 
 [build.environment]
   NEXT_TELEMETRY_DISABLED = "1"
@@ -18,6 +19,9 @@
   NEXT_PUBLIC_APP_HERO_IMAGE = "https://easecrypt.netlify.app/hero.png"
   NEXT_PUBLIC_SPLASH_IMAGE = "https://easecrypt.netlify.app/splash.png"
   NEXT_PUBLIC_SPLASH_BACKGROUND_COLOR = "#101010"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
 
 # Redirect to ensure Farcaster manifest is always accessible
 [[redirects]]
