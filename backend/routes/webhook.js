@@ -5,6 +5,8 @@ dotenv.config();
 
 import * as paystack from "../services/paystack.js";
 import * as flutterwave from "../services/flutterwave.js";
+import Transaction from "../models/Transaction.js";
+import starknet from "../starknet-contract.js";
 
 const router = express.Router();
 
@@ -60,21 +62,31 @@ router.post("/paystack", async (req, res) => {
 });
 
 router.post("/flutterwave", async (req, res) => {
-  console.log(req.body);
-  // if (!verifyFlutterwaveSignature(req)) {
-  //   return res.status(401).send("Invalid Flutterwave signature");
-  // }
-
   const event = req.body.event;
   const data = req.body.data;
 
-  if (event === "transfer.completed" && data.status === "successful") {
-    console.log("✅ Flutterwave Payment received:", data.amount, data.currency);
-    console.log("Customer:", data.customer?.email);
-
-    const transaction = await flutterwave.verifyTransaction(data.id);
-    // Save to DB (here we just log)
-    console.log("Verified transaction:", transaction);
+  if (event === "charge.completed" && data.status === "successful") {
+    console.log("✅ Flutterwave:", data);
+    const transaction = await Transaction.findByReference(data.tx_ref);
+    if (transaction) {
+      if (transaction.token === "STRK") {
+        const token_address = process.env.STARKNET_TOKEN_ADDRESS;
+        const recipient_address = transaction.address;
+        const amount = Number(Math.ceil(transaction.crypto_value));
+        const contract = await starknet.getContract();
+        const tx = await contract.withdraw(
+          token_address,
+          recipient_address,
+          amount
+        );
+        await starknet.provider.waitForTransaction(tx.transaction_hash);
+        console.log("✅ Starknet:", tx);
+        await Transaction.update(transaction.id, {
+          status: "COMPLETED",
+          hash: null,
+        });
+      }
+    }
   }
 
   res.sendStatus(200);
