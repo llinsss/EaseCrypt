@@ -86,6 +86,8 @@ NEXT_PUBLIC_APP_NAME=EaseCrypt
 ```
 
  Smart Contract Integration
+`contract_address`: 0x002ec83fc3ffc71a94321b6eb730d8b653fd0ec97b1876eecb82e6d69cc1fda7
+`transaction_hash`: 0x01ffa5b2baf280a25a7b5bf68f0ed0bad1a24bc0537cd466e0232d1b5de5a7ea
 
 The project includes a Solidity smart contract (`UsageTracker.sol`) for tracking:
 - Total transaction count
