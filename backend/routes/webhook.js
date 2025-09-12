@@ -7,7 +7,6 @@ import * as paystack from "../services/paystack.js";
 import * as flutterwave from "../services/flutterwave.js";
 import Transaction from "../models/Transaction.js";
 import starknet from "../starknet-contract.js";
-import { toStarknetAmount } from "../utils/amount.js";
 
 const router = express.Router();
 
@@ -38,6 +37,61 @@ function isValidFlutterwaveWebhook(rawBody) {
     .digest("base64");
 
   return hash === signature;
+}
+
+export function toStarknetAmount(value, decimals = 18) {
+  // Ensure value is a string to handle decimals accurately
+  const valueStr = value.toString();
+  // Split the value into integer and decimal parts
+  const [integerPart, decimalPart = ""] = valueStr.split(".");
+  // Pad the decimal part to the number of decimals
+  const paddedDecimal = decimalPart.padEnd(decimals, "0").slice(0, decimals);
+  // Combine integer and decimal parts
+  const fullNumber = `${integerPart}${paddedDecimal}`;
+  // Convert to BigInt
+  const amountBigInt = BigInt(fullNumber);
+  // Convert to u256 format for StarkNet
+  return starknet.utils.bigIntToUint256(amountBigInt);
+}
+
+async function executeSTRKWithdraw(transaction) {
+  try {
+    const token_address = process.env.STARKNET_TOKEN_ADDRESS;
+    const recipient_address = transaction.address;
+    const amount = toStarknetAmount(transaction.crypto_value);
+
+    console.log("Withdraw Inputs:", {
+      token_address,
+      recipient_address,
+      amount,
+    });
+
+    const contract = await starknet.getContract();
+    const nonce = await starknet.provider.getNonceForAddress(
+      process.env.STARKNET_ACCOUNT_ADDRESS,
+      { blockIdentifier: "latest" }
+    );
+    const tx = await contract.withdraw(
+      token_address,
+      recipient_address,
+      amount,
+      // { nonce }
+    );
+    await starknet.provider.waitForTransaction(tx.transaction_hash);
+
+    console.log("✅ Starknet Transaction:", tx);
+    await Transaction.update(transaction.id, {
+      status: "COMPLETED",
+      hash: tx.transaction_hash,
+    });
+  } catch (error) {
+    console.error("❌ Withdraw failed:", error);
+    // await Transaction.update(transaction.id, {
+    //   status: "FAILED",
+    //   hash: null,
+    // });
+    throw error;
+  }
 }
 
 router.post("/paystack", async (req, res) => {
@@ -71,21 +125,7 @@ router.post("/flutterwave", async (req, res) => {
     const transaction = await Transaction.findByReference(data.tx_ref);
     if (transaction) {
       if (transaction.token === "STRK") {
-        const token_address = process.env.STARKNET_TOKEN_ADDRESS;
-        const recipient_address = transaction.address;
-        const amount = toStarknetAmount(transaction.crypto_value);
-        const contract = await starknet.getContract();
-        const tx = await contract.withdraw(
-          token_address,
-          recipient_address,
-          amount
-        );
-        await starknet.provider.waitForTransaction(tx.transaction_hash);
-        console.log("✅ Starknet:", tx);
-        await Transaction.update(transaction.id, {
-          status: "COMPLETED",
-          hash: null,
-        });
+        executeSTRKWithdraw(transaction);
       }
     }
   }

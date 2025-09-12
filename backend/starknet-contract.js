@@ -2,7 +2,7 @@ import { Account, Contract, RpcProvider, stark, uint256 } from "starknet";
 import { mainABI } from "./abis/StarknetContractABI.js";
 
 const STARKNET_CONFIG = {
-  network: process.env.STARKNET_NETWORK || "mainnet-alpha",
+  network: process.env.STARKNET_NETWORK,
   nodeUrl: process.env.STARKNET_RPC_URL,
   contractAddress: process.env.STARKNET_CONTRACT_ADDRESS,
   accountAddress: process.env.STARKNET_ACCOUNT_ADDRESS,
@@ -19,7 +19,9 @@ if (STARKNET_CONFIG.accountAddress && STARKNET_CONFIG.privateKey) {
   account = new Account(
     provider,
     STARKNET_CONFIG.accountAddress,
-    STARKNET_CONFIG.privateKey
+    STARKNET_CONFIG.privateKey,
+    undefined,
+    { blockIdentifier: "latest" }
   );
 }
 
