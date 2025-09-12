@@ -1,7 +1,7 @@
 "use client";
 
 import { useTheme } from "next-themes";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { useRouter } from "next/navigation";
 import toast from "react-hot-toast";
 import { Button } from "@/components/ui/button";
@@ -13,7 +13,14 @@ import {
   SelectTrigger,
   SelectValue,
 } from "@/components/ui/select";
-import { Moon, Sun, Database, AlertTriangle } from "lucide-react";
+import {
+  Dialog,
+  DialogContent,
+  DialogHeader,
+  DialogTitle,
+  DialogTrigger,
+} from "@/components/ui/dialog";
+import { Moon, Sun, Database, AlertTriangle, QrCode } from "lucide-react";
 import { TOKENS, TokenKey } from "@/lib/constants/tokens";
 import { FiatRates, CryptoRates } from "@/lib/types/rates";
 import {
@@ -22,6 +29,8 @@ import {
   formatConversion,
 } from "@/lib/utils/rates";
 import { apiClient } from "@/lib/api";
+
+import { Html5QrcodeScanner } from "html5-qrcode";
 
 export function EaseCryptApp() {
   const { theme, setTheme } = useTheme();
@@ -36,6 +45,9 @@ export function EaseCryptApp() {
   const [address, setAddress] = useState<string>("");
   const [email, setEmail] = useState<string>("");
   const [token, setToken] = useState<TokenKey>("strk");
+  const [scannerOpen, setScannerOpen] = useState(false);
+
+  const scannerRef = useRef<Html5QrcodeScanner | null>(null);
 
   const router = useRouter();
 
@@ -88,6 +100,34 @@ export function EaseCryptApp() {
       setCryptoRateLoading(false);
     })();
   }, [token]);
+
+  // QR Scanner
+  useEffect(() => {
+    if (scannerOpen) {
+      import("html5-qrcode").then(({ Html5QrcodeScanner }) => {
+        scannerRef.current = new Html5QrcodeScanner(
+          "qr-reader",
+          { fps: 10, qrbox: 250 },
+          false
+        );
+        scannerRef.current.render(
+          (decodedText) => {
+            setAddress(decodedText);
+            setScannerOpen(false);
+            toast.success("QR code scanned successfully!");
+          },
+          (errorMessage) => {
+            console.log(errorMessage);
+          }
+        );
+      });
+    } else {
+      if (scannerRef.current) {
+        scannerRef.current.clear().catch(console.error);
+        scannerRef.current = null;
+      }
+    }
+  }, [scannerOpen]);
 
   if (!mounted) {
     return (
@@ -171,9 +211,10 @@ export function EaseCryptApp() {
           </Select>
           <div className="w-full flex justify-end text-sm text-gray-600">
             {token &&
-            cryptoRate?.symbol.includes(TOKENS[token].symbol) &&
+            cryptoRate?.symbol &&
+            cryptoRate.symbol.includes(TOKENS[token].symbol) &&
             !cryptoRateLoading
-              ? `1 ${TOKENS[token].symbol} = ${cryptoRate?.last} USD`
+              ? `1 ${TOKENS[token].symbol} = ${cryptoRate.last} USD`
               : "Fetching rate..."}
           </div>
         </div>
@@ -217,14 +258,34 @@ export function EaseCryptApp() {
           <p className="text-xs text-gray-500 mb-2">
             Where you want your tokens sent
           </p>
-          <Input
-            id="address"
-            type="text"
-            value={address}
-            onChange={(e) => setAddress(e.target.value)}
-            className="font-mono text-sm"
-            placeholder={`Enter ${TOKENS[token].symbol} wallet address`}
-          />
+          <div className="flex gap-2">
+            <Input
+              id="address"
+              type="text"
+              value={address}
+              onChange={(e) => setAddress(e.target.value)}
+              className="font-mono text-sm flex-1"
+              placeholder={`Enter ${TOKENS[token].symbol} wallet address`}
+            />
+            <Dialog open={scannerOpen} onOpenChange={setScannerOpen}>
+              <DialogTrigger asChild>
+                <Button
+                  variant="outline"
+                  size="sm"
+                  className="px-3"
+                  type="button"
+                >
+                  <QrCode className="h-4 w-4" />
+                </Button>
+              </DialogTrigger>
+              <DialogContent className="sm:max-w-md">
+                <DialogHeader>
+                  <DialogTitle>Scan QR Code</DialogTitle>
+                </DialogHeader>
+                <div id="qr-reader" className="w-full"></div>
+              </DialogContent>
+            </Dialog>
+          </div>
         </div>
 
         {/* Email */}
