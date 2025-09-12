@@ -1,4 +1,4 @@
-use ease_crypt::contracts::wallet::{IEaseCryptDispatcher, IEaseCryptDispatcherTrait};
+use ease_crypt::contracts::ease_crypt::{IEaseCryptDispatcher, IEaseCryptDispatcherTrait};
 use openzeppelin::token::erc20::interface::{IERC20Dispatcher, IERC20DispatcherTrait};
 use snforge_std::{
     ContractClassTrait, DeclareResultTrait, declare, start_cheat_caller_address,
@@ -33,7 +33,7 @@ fn test_withdraw() {
 
     start_cheat_caller_address(contract_address, admin_address);
 
-    dispatcher.withdraw(erc20_address, receipent_address, 100);
+    dispatcher.withdraw(erc20_address, receipent_address, 10);
     stop_cheat_caller_address(contract_address);
 
     let balance_after = dispatcher.check_balance(erc20_address, contract_address);
