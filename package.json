@@ -9,6 +9,7 @@
     "lint": "cd frontend && npm run lint"
   },
   "dependencies": {
-    "@coinbase/onchainkit": "^0.38.19"
+    "@coinbase/onchainkit": "^0.38.19",
+    "starknet": "^7.6.4"
   }
 }

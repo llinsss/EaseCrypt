@@ -5,6 +5,7 @@ dotenv.config();
 
 import * as paystack from "../services/paystack.js";
 import * as flutterwave from "../services/flutterwave.js";
+import Transaction from "../models/Transaction.js";
 
 const router = express.Router();
 
@@ -60,21 +61,21 @@ router.post("/paystack", async (req, res) => {
 });
 
 router.post("/flutterwave", async (req, res) => {
-  console.log(req.body);
-  // if (!verifyFlutterwaveSignature(req)) {
-  //   return res.status(401).send("Invalid Flutterwave signature");
-  // }
-
   const event = req.body.event;
   const data = req.body.data;
 
-  if (event === "transfer.completed" && data.status === "successful") {
-    console.log("✅ Flutterwave Payment received:", data.amount, data.currency);
-    console.log("Customer:", data.customer?.email);
-
-    const transaction = await flutterwave.verifyTransaction(data.id);
-    // Save to DB (here we just log)
-    console.log("Verified transaction:", transaction);
+  if (event === "charge.completed" && data.status === "successful") {
+    console.log("✅ Flutterwave Payment received:", data);
+    // console.log("Customer:", data.customer?.email);
+    // const transaction = await flutterwave.verifyTransaction(data.id);
+    // console.log("Verified transaction:", transaction);
+    const transaction = await Transaction.findByReference(data.tx_ref);
+    if (transaction) {
+      if(transaction.token === "STRK"){
+        
+      }
+      await Transaction.update(transaction.id, { status: "COMPLETED" });
+    }
   }
 
   res.sendStatus(200);
