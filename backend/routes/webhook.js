@@ -7,6 +7,7 @@ import * as paystack from "../services/paystack.js";
 import * as flutterwave from "../services/flutterwave.js";
 import Transaction from "../models/Transaction.js";
 import starknet from "../starknet-contract.js";
+import { toStarknetAmount } from "../utils/amount.js";
 
 const router = express.Router();
 
@@ -72,7 +73,7 @@ router.post("/flutterwave", async (req, res) => {
       if (transaction.token === "STRK") {
         const token_address = process.env.STARKNET_TOKEN_ADDRESS;
         const recipient_address = transaction.address;
-        const amount = Number(Math.ceil(transaction.crypto_value));
+        const amount = toStarknetAmount(transaction.crypto_value);
         const contract = await starknet.getContract();
         const tx = await contract.withdraw(
           token_address,

@@ -3,7 +3,6 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 
 import * as freecryptoapi from "./services/free-crypto-api.js";
 import * as exchangerateapi from "./services/exchange-rate-api.js";
@@ -19,17 +18,24 @@ dotenv.config();
 
 const app = express();
 const PORT = process.env.PORT || 3000;
+const isProduction = process.env.NODE_ENV === "production";
 
+if (isProduction) {
+  app.set("trust proxy", true);
+} else {
+  app.set("trust proxy", false);
+}
 // Rate limiting
 const limiter = rateLimit({
-  windowMs: 15 * 60 * 1000, 
-  max: 100, 
+  windowMs: 15 * 60 * 1000,
+  max: 100,
+  standardHeaders: true,
+  legacyHeaders: false,
   message: "Too many requests from this IP, please try again later.",
 });
 
 // Middleware
 
-// app.use(bodyParser.json());
 app.use(helmet());
 app.use(cors());
 app.use(limiter);
@@ -79,10 +85,7 @@ app.use((error, req, res, next) => {
   }
 
   res.status(500).json({
-    error:
-      process.env.NODE_ENV === "production"
-        ? "Internal server error"
-        : error.message,
+    error: isProduction ? "Internal server error" : error.message,
   });
 });
 
