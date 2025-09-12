@@ -3,7 +3,6 @@ import cors from "cors";
 import helmet from "helmet";
 import rateLimit from "express-rate-limit";
 import dotenv from "dotenv";
-import bodyParser from "body-parser";
 
 import * as freecryptoapi from "./services/free-crypto-api.js";
 import * as exchangerateapi from "./services/exchange-rate-api.js";
@@ -37,7 +36,6 @@ const limiter = rateLimit({
 
 // Middleware
 
-// app.use(bodyParser.json());
 app.use(helmet());
 app.use(cors());
 app.use(limiter);
